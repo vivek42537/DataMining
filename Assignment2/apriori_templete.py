@@ -108,7 +108,7 @@ def get_freq(dataset, candidates, min_support, verbose=False):
     support_data : dict
         The support data for all candidate itemsets.
     """
-    for(k = 2; )
+
     
 
 def apriori_gen(freq_sets, k):
@@ -151,7 +151,19 @@ def apriori_gen(freq_sets, k):
     print("Ck: ", Ck)
 
     # now prune the set
-
+    for x in Ck:
+        pp = combinations(x, kLess + 1) 
+        for i in pp:
+            i = list(i)
+            if i not in freq_sets :
+                # print("iiii: ", i)
+                # print("NEW ck: ", Ck)
+                # print("X rem: ", x)
+                if x in Ck:
+                    Ck.remove(x)
+        
+    print("CkPruned: ", Ck)
+    return Ck
 
 def loadDataSet(fileName, delim=','):
     fr = open(fileName)
