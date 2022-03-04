@@ -35,22 +35,14 @@ def pca(dataMat, PC_num=2):
     Output:
         lowDDataMat: the 2-d data after PCA transformation
     '''
-    # row is observation, col is attribute
-    # print(dataMat)
     mean = dataMat.mean(axis=0, keepdims=True)
-    # print("MEAN", mean)
     adjustedData = dataMat - dataMat.mean(axis=0, keepdims=True)
     covMat = np.cov(adjustedData, rowvar=False)
-    # print(adjustedData)
-    # print("COVMAT", covMat)
+
     w, v = eig(covMat)
     val, vect = eigh(covMat, subset_by_index=[len(w)-2, len(w)-1])
-    # valVect = zip(val, vect)
-    # print("ZIP", valVect)
     print("EIGVAL: ", val, "EIGVECT: ", vect)
     lowDDataMat = np.matmul(adjustedData, vect)
-
-    # print("LARGE VECT: ", vect)
     return array(lowDDataMat)
 
 
