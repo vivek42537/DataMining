@@ -1,4 +1,5 @@
 from __future__ import print_function
+# from asyncio.windows_events import NULL
 import sys
 import itertools
 from itertools import combinations
@@ -108,8 +109,24 @@ def get_freq(dataset, candidates, min_support, verbose=False):
     support_data : dict
         The support data for all candidate itemsets.
     """
-
+    print("DATASET: ", dataset)
+    print("CAN: ", candidates)
+    print("HI")
+    freq_list = []
+    dic = {}
+    # for x in dataset:
+    #     for y in candidates:
+    #         if dic[y] == None :
+    #             dic[y] = 0
+    #         elif (y.issubset(x)):
+    #             dic[y] = dic[y] + 1
     
+    # for k, v in dic:
+    #     if v > min_support:
+    #         freq_list.append(k)
+    
+    support_data = dic
+    return freq_list, support_data
 
 def apriori_gen(freq_sets, k):
     """Generates candidate itemsets (via the F_k-1 x F_k-1 method).
