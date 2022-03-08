@@ -112,6 +112,7 @@ def get_freq(dataset, candidates, min_support, verbose=False):
     # print("DATASET: ", dataset)
     # print("CAN: ", candidates)
     # print("MIN: ", min_support)
+    minSup = min_support * len(dataset) #need 50% of dataset to have item
     freq_list = []
     dic = {}
     for x in dataset:
@@ -122,14 +123,11 @@ def get_freq(dataset, candidates, min_support, verbose=False):
                 dic[y] = dic[y] + 1
     
     for k in dic:
-        # print("BLAH: ", k)
-        # print("val: ", dic[k])
-        if (dic[k] > min_support):
+        if (dic[k] >= minSup):
             freq_list.append(k)
     
     support_data = dic
-    # print("SUPDATA: ", support_data)
-    # print("FREQLIST: ", freq_list)
+
     return freq_list, support_data
 
 def apriori_gen(freq_sets, k):
@@ -157,40 +155,45 @@ def apriori_gen(freq_sets, k):
     """
     # generate candidate set Ck
     Ck = []
-    kLess = len(freq_sets[0]) - 1
+    kLess = len(freq_sets[0]) - 1 #k = 3 then kLess = 1
     for x in freq_sets:
         for y in freq_sets:
             # print("x: " , x , "y: " , y)
-            # if ((x[0:kLess] == y[0:kLess]) and (x != y)):
             if x != y:
-                if len(x.intersection(y)) == k - 2:
-                    i = set(x)
-                    j = set(y)
-                    merged = i | j 
+                i = map(list, x)
+                j = map(list, y)
+                if sorted(i[0:kLess]) == sorted(j[0:kLess]) :
+                    # i = set(x)
+                    # j = set(y)
+                    merged = x | y
                     # print("merged: ", merged)
                     if(merged not in Ck):
                         Ck.append(merged)
 
-    # print("CKCKCKCKCKCKCKCK: ", Ck)
-    print("LENCK: ", len(Ck))
-
     # now prune the set
+    prune = []
     for x in Ck:
-        pp = combinations(x, kLess + 1) 
+        xNew = set(x)
+        pp = combinations(xNew, kLess + 1) 
         for i in pp:
-            i = list(i)
-            if i not in freq_sets :
-                # print("iiii: ", i)
-                # print("NEW ck: ", Ck)
-                # print("X rem: ", x)
+            i = set(i)
+            if i not in freq_sets:
                 if x in Ck:
-                    Ck.remove(x)
-        
-    # print("CkPruned: ", Ck)
+                    # Ck.remove(x)  #this does not work for some reason (different from removing with prune at end) but how?
+                    prune.append(x)
+
+    for y in prune:
+        Ck.remove(y)
+
     Ck = list(map(frozenset, Ck))
-    # print("TYPE: ", type(Ck))
+    # print("Candidate:       ", Ck)
+    # print("Frequent:         ", freq_sets)
+    # print("FreqLength: ", len(freq_sets))
+    # print("CandidateLength: ", len(Ck))
+    # print()
 
     return Ck
+
 
 def loadDataSet(fileName, delim=','):
     fr = open(fileName)
@@ -220,16 +223,16 @@ def bool_transfer(input):
 
 
 if __name__ == '__main__':
-    print("START OF PROGRAM WEEEEEEEEEE")
+    # print("START OF PROGRAM WEEEEEEEEEE")
     if len(sys.argv)==3:
         F, support = run_apriori(sys.argv[1], float(sys.argv[2]))
     elif len(sys.argv)==4:
         F, support = run_apriori(sys.argv[1], float(sys.argv[2]), bool_transfer(sys.argv[3]))
     else:
         raise ValueError('Usage: python apriori_templete.py <data_path> <min_support> <is_verbose>')
-    print("F: ")
+    # print("F: ")
     print(F)
-    print("SUPPORT: ")
+    print()
     print(support)
 
     '''
