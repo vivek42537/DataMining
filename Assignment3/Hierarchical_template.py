@@ -4,9 +4,11 @@
 import sys
 from matplotlib import pyplot as plt
 import numpy as np
+from numpy import *
 import copy
 import csv
-
+import math
+from scipy.spatial import distance
 
 def loadDataSet(fileName):      #general function to parse tab -delimited floats
     dataMat = []                #assume last column is target value
@@ -47,6 +49,17 @@ def merge_cluster(distance_matrix, cluster_candidate, T):
     merge_list = []
 
     # TODO
+    mini = float(inf)
+
+    for i in distance_matrix :
+        for j in i:
+            if j < mini:
+                mini = j
+                save = i
+    
+    print("cluster: ", cluster_candidate)
+    # for k, v in cluster_candidate:
+
 
     return cluster_candidate, merge_list
 

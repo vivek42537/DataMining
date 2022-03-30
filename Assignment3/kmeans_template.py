@@ -8,6 +8,7 @@ import numpy as np
 import copy
 import csv
 import math
+from scipy.spatial import distance
 
 
 def loadDataSet(fileName):      #general function to parse tab -delimited floats
@@ -33,7 +34,7 @@ def loadCenterSet(fileName):      #general function to parse tab -delimited floa
 def assignCluster(dataSet, k, centroids):
     '''For each data point, assign it to the closest centroid
     Inputs:
-        dataSet: each row represents an observation and 
+        dataSet: each row represents an observation and
                  each column represents an attribute
         k:  number of clusters
         centroids: initial centroids or centroids of last iteration
@@ -42,23 +43,25 @@ def assignCluster(dataSet, k, centroids):
             assigned cluster id for each data point
     '''
     #TODO
-    for d in dataSet :
-        minDist = float(math.inf)
-        min = -1
+    clusterAssment = []
+
+    for data in dataSet :
+        minDist = float(inf)
+        minInd = -1
         for idx, cent in enumerate(centroids) :
-            d = math.dist(d, cent)
+            d = distance.euclidean(data, cent)
             if d < minDist :
                 minDist = d
-                min = idx
-        clusterAssment.append(min)
-
+                minInd = idx
+        clusterAssment.append(minInd)
+        
     return clusterAssment
 
 
 def getCentroid(dataSet, k, clusterAssment):
     '''recalculate centroids
-    Input: 
-        dataSet: each row represents an observation and 
+    Input:
+        dataSet: each row represents an observation and
             each column represents an attribute
         k:  number of clusters
         clusterAssment: list
@@ -66,36 +69,24 @@ def getCentroid(dataSet, k, clusterAssment):
     Output:
         centroids: cluster centroids
     '''
-    #TODO
-    for i in k:
-        centLists = []
-        for ind in indData :
-            if ind[0] == i:
-                centLists.append(ind[1])
-                
-        mean = np.array(centLists).mean(axis = 0)
-        print("mean: ", mean)
-        print("Cent: ", centLists)
 
-    newCentroids = []
+    #TODO
+    centroids = []
     indData = list(zip(clusterAssment, dataSet))
     for i in range(k):
         centLists = []
         for ind in indData :
             if ind[0] == i :
                 centLists.append(ind[1])
-        mean = np.array(centLists).mean(axis = 0)
-        mean = list(mean)
-        newCentroids.append(mean)
+        centroids.append(np.array(centLists).mean(axis = 0))
+        centroids = list(centroids)
     
-    centroids = newCentroids
     return centroids
-
 
 def kMeans(dataSet, T, k, centroids):
     '''
     Input:
-        dataSet: each row represents an observation and 
+        dataSet: each row represents an observation and
                 each column represents an attribute
         T:  number of iterations
         k:  number of clusters
@@ -110,7 +101,7 @@ def kMeans(dataSet, T, k, centroids):
 
     i=1
     while i < T and list(pre_clusters) != list(clusterAssment):
-        pre_clusters = copy.deepcopy(clusterAssment) 
+        pre_clusters = copy.deepcopy(clusterAssment)
         clusterAssment = assignCluster(dataSet, k, centroids )
         centroids      = getCentroid(dataSet, k, clusterAssment)
         i=i+1
