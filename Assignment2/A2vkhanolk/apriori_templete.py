@@ -186,12 +186,10 @@ def apriori_gen(freq_sets, k):
         Ck.remove(y)
 
     Ck = list(map(frozenset, Ck))
-    # print("Candidate:       ", Ck)
-    # print("Frequent:         ", freq_sets)
     # print("FreqLength: ", len(freq_sets))
+    # print("FREQ: ", freq_sets)
     # print("CandidateLength: ", len(Ck))
-    # print()
-
+    # print("CANDIDATE: ", Ck)
     return Ck
 
 
@@ -231,9 +229,10 @@ if __name__ == '__main__':
     else:
         raise ValueError('Usage: python apriori_templete.py <data_path> <min_support> <is_verbose>')
     # print("F: ")
-    print(F)
-    print()
-    print(support)
+    # print()
+    # print(F)
+    # print()
+    # print(support)
 
     '''
     Example: 
