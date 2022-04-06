@@ -129,12 +129,12 @@ if __name__ == '__main__':
     else:
         data_filename = 'Iris.csv'
         centroid_filename = 'Iris_Initial_Centroids.csv'
-        k = 6
+        k = 3
     save_filename = data_filename.replace('.csv', '_kmeans_cluster.csv')
 
     data = loadDataSet(data_filename)
     centroids = loadCenterSet(centroid_filename)
-    centroids, clusterAssment = kMeans(data, 7, k, centroids )
+    centroids, clusterAssment = kMeans(data, 12, k, centroids )
     print(centroids)
     saveData(save_filename, data, clusterAssment)
 
