@@ -96,6 +96,7 @@ def kMeans(dataSet, T, k, centroids):
         clusterAssment: list
             assigned cluster id for each data point
     '''
+    print("T: ", T, "k: ", k)
     clusterAssment = [0] * len(dataSet)
     pre_clusters  = [1] * len(dataSet)
 
@@ -128,13 +129,12 @@ if __name__ == '__main__':
     else:
         data_filename = 'Iris.csv'
         centroid_filename = 'Iris_Initial_Centroids.csv'
-        k = 3
-
+        k = 6
     save_filename = data_filename.replace('.csv', '_kmeans_cluster.csv')
 
     data = loadDataSet(data_filename)
     centroids = loadCenterSet(centroid_filename)
-    centroids, clusterAssment = kMeans(data, 12, k, centroids )
+    centroids, clusterAssment = kMeans(data, 7, k, centroids )
     print(centroids)
     saveData(save_filename, data, clusterAssment)
 

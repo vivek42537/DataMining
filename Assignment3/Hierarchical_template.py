@@ -49,17 +49,27 @@ def merge_cluster(distance_matrix, cluster_candidate, T):
     merge_list = []
 
     # TODO
-    mini = float(inf)
-
-    for i in distance_matrix :
-        for j in i:
-            if j < mini:
-                mini = j
-                save = i
-    
-    print("cluster: ", cluster_candidate)
+    minValue = np.amin(distance_matrix)
+    index = np.where(distance_matrix == np.amin(distance_matrix))
+    i = index[0]
+    j = index[1]
+    # print("matrix: ", distance_matrix)
+    # print("cluster Before: ", cluster_candidate)
+    a = i[0]
+    b = i[1]
+    uno = list(cluster_candidate)[a]
+    dos = list(cluster_candidate)[b]
+    merge_list.append(tuple(((uno, cluster_candidate[uno]))))
+    merge_list.append(tuple((dos, cluster_candidate[dos])))
+    # print("mergeList: ", merge_list)
+    cluster_candidate.pop(uno)
+    cluster_candidate.pop(dos)
+    temp = []
+    temp.append(i[0])
+    temp.append(i[1])
+    cluster_candidate[T] = temp
+    # print("cluster After: ", cluster_candidate)
     # for k, v in cluster_candidate:
-
 
     return cluster_candidate, merge_list
 
@@ -85,6 +95,7 @@ def update_distance(distance_matrix, cluster_candidate, merge_list):
     '''
     
     # TODO
+    
     
     return distance_matrix  
 
