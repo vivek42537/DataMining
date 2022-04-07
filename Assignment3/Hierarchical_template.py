@@ -46,37 +46,54 @@ def merge_cluster(distance_matrix, cluster_candidate, T):
         [(cluster_one_id, point_ids_in_cluster_one), 
          (cluster_two_id, point_ids_in_cluster_two)]
     '''
-    merge_list = []
 
     # TODO
+    merge_list = []
+
     minValue = np.amin(distance_matrix)
     index = np.where(distance_matrix == np.amin(distance_matrix))
     i = index[0]
     j = index[1]
-    print("matrix: ", distance_matrix)
-    print("cluster Before: ", cluster_candidate)
-    print("I: ", i, "J: ", j)
+    # print("matrix: ", distance_matrix)
     if len(i) > 1:
         a = i[0]
         b = i[1]
     else :
         a = i[0]
         b = j[0]
-    print("a: ", a, "b: ", b)
-    uno = list(cluster_candidate)[a]
-    dos = list(cluster_candidate)[b]
-    merge_list.append(tuple(((uno, cluster_candidate[uno]))))
-    merge_list.append(tuple((dos, cluster_candidate[dos])))
+    # print("a: ", a, "b: ", b)
+    # print("min: ", minValue)
+    # print("cluster Before: ", cluster_candidate)
     # print("mergeList: ", merge_list)
-    cluster_candidate.pop(uno)
-    cluster_candidate.pop(dos)
-    temp = []
-    temp.append(a)
-    temp.append(b)
-    cluster_candidate[T] = temp
-    # print("cluster After: ", cluster_candidate)
-    # for k, v in cluster_candidate:
+    for k,v in cluster_candidate.items() :
+        for x in v:
+            if x == a:
+                # print("Key: ", k, "Val: ", v)
+                pop1 = k
+                val1 = v
 
+    for k,v in cluster_candidate.items() :
+        for x in v:
+            if x == b:
+                # print("Key: ", k, "Val: ", v)
+                pop2 = k
+                val2 = v
+
+    merge_list.append(tuple(((pop1, val1))))
+    merge_list.append(tuple((pop2, val2)))
+
+    if pop1 != pop2:
+        cluster_candidate.pop(pop1)
+        cluster_candidate.pop(pop2)
+        temp = []
+        for oney in val1:
+            temp.append(oney)
+        for twoy in val2:
+            temp.append(twoy)
+
+        cluster_candidate[T] = temp
+
+    # print("cluster After: ", cluster_candidate)
     return cluster_candidate, merge_list
 
 
@@ -104,12 +121,14 @@ def update_distance(distance_matrix, cluster_candidate, merge_list):
     # print("distanceMatrix: ", distance_matrix)
     x = merge_list[0][1]
     y = merge_list[1][1]
-    i = x[0]
-    j = y[0]
-    # print("x: ", x, "y: ", y)
-    # print("i: ", i, "j: ", j)
-    # print("point: ", distance_matrix[i][j])
-    distance_matrix[i][j] = 100000
+    # i = x[0]
+    # j = y[0]
+    for i in x:
+        for j in y:
+            # print("i: ", i, "j: ", j)
+            distance_matrix[i][j] = 100000
+            distance_matrix[j][i] = 100000
+
     return distance_matrix  
 
     
@@ -183,6 +202,7 @@ if __name__ == '__main__':
         data_filename = sys.argv[1]
         cluster_number = int(sys.argv[2])
     else:
+        print("poo")
         data_filename = 'Example.csv'
         cluster_number = 1
 

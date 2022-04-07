@@ -134,7 +134,7 @@ if __name__ == '__main__':
 
     data = loadDataSet(data_filename)
     centroids = loadCenterSet(centroid_filename)
-    centroids, clusterAssment = kMeans(data, 12, k, centroids )
+    centroids, clusterAssment = kMeans(data, 7, k, centroids )
     print(centroids)
     saveData(save_filename, data, clusterAssment)
 
