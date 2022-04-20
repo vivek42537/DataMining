@@ -63,12 +63,14 @@ def gini(data):
         val1, count1 = c.most_common()[0]
         val2, count2 = c.most_common()[1]
         gin = 1 - pow(count1/tot, 2) - pow(count2/tot, 2)
+        numOf = count1 + count2
     else :
         val1, count1 = c.most_common()[0]
         gin = 1 - pow(count1/tot, 2)
+        numOf = count1
 
     print("feature: ", feat, " gini: ", gin)
-    return gin
+    return gin, numOf
 
 def chooseBestFeature(dataSet):
     '''
@@ -86,20 +88,14 @@ def chooseBestFeature(dataSet):
         index of the best feature
     '''
     #TODO
-    # labelList = []
-    # for x in dataSet:
-    #     labelList.append(x[-1])
-
-    # c = Counter(labelList)
-    # tot = len(dataSet)
-    # val1, count1 = c.most_common()[0]
-    # val2, count2 = c.most_common()[1]
-    # gin = 1 - pow(count1/tot, 2) - pow(count2/tot, 2)
-    gin = gini(dataSet)
+    gin, kk = gini(dataSet)
     # print("gin: ", gin)
-
+    tot = len(data)
     featLen = len(dataSet[0]) - 1
     for y in range(featLen) :
+        giniCompiled = []
+        countCompiled = []
+        # print("INDEX: ", y)
         featList = []
         for x in dataSet:
             feat = x[y]
@@ -113,9 +109,15 @@ def chooseBestFeature(dataSet):
                 if z == k[y]:
                     ginList.append(k)
             # print("GINLIST: ", ginList)
-            gingin = gini(ginList)
-
-
+            gingin, count = gini(ginList)
+            giniCompiled.append(gingin)
+            countCompiled.append(count)
+        # print("giniCompiled: ", giniCompiled)
+        # print("count Compied: ", countCompiled)
+        gain = gin
+        for g, c in zip(giniCompiled, countCompiled):
+            gain = gain - ((c/tot) * g)
+        print("INDEX: ", y, "GAIN: ", gain)
 # use set on artificially made columns and then use that set to calculate the gini.
     bestFeatId = 0
     return bestFeatId  
