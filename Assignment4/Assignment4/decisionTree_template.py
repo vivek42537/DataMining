@@ -69,7 +69,7 @@ def gini(data):
         gin = 1 - pow(count1/tot, 2)
         numOf = count1
 
-    print("feature: ", feat, " gini: ", gin)
+    # print("feature: ", feat, " gini: ", gin)
     return gin, numOf
 
 def chooseBestFeature(dataSet):
@@ -92,6 +92,7 @@ def chooseBestFeature(dataSet):
     # print("gin: ", gin)
     tot = len(data)
     featLen = len(dataSet[0]) - 1
+    gainList = []
     for y in range(featLen) :
         giniCompiled = []
         countCompiled = []
@@ -101,25 +102,24 @@ def chooseBestFeature(dataSet):
             feat = x[y]
             featList.append(feat)
         featSet = set(featList)
-        # print("featList: ", featList)
-        # print("featSet: ", featSet)
+
         for z in featSet:
             ginList = []
             for k in dataSet:
                 if z == k[y]:
                     ginList.append(k)
-            # print("GINLIST: ", ginList)
             gingin, count = gini(ginList)
             giniCompiled.append(gingin)
             countCompiled.append(count)
-        # print("giniCompiled: ", giniCompiled)
-        # print("count Compied: ", countCompiled)
         gain = gin
         for g, c in zip(giniCompiled, countCompiled):
             gain = gain - ((c/tot) * g)
-        print("INDEX: ", y, "GAIN: ", gain)
-# use set on artificially made columns and then use that set to calculate the gini.
-    bestFeatId = 0
+
+        gainList.append(gain)
+        # print("INDEX: ", y, "GAIN: ", gain)
+        maxGain = max(gainList)
+    bestFeatId = gainList.index(maxGain)
+    # print("max: ", maxGain, "ind: ", bestFeatId)
     return bestFeatId  
 
 
@@ -145,15 +145,22 @@ def stopCriteria(dataSet):
     # TODO
     print("dataset: ", dataSet)
     labelList = []
+
     for x in dataSet:
         labelList.append(x[-1])
+        numCols = len(x)
 
-    # print("lab ", labelList)
     c = Counter(labelList)
     val, count = c.most_common()[0]
     # print("val: ", val)
     # print("count: ", count)
-    assignedLabel = val
+
+    numItems = len(set(labelList))
+
+    if numItems == 1:
+        assignedLabel = val
+    elif numCols == 1:
+        assignedLabel = val
 
     return assignedLabel
 
@@ -174,8 +181,8 @@ def buildTree(dataSet, featNames):
         myTree: nested dictionary
     '''
     assignedLabel = stopCriteria(dataSet)
-    # if assignedLabel:
-    #     return assignedLabel
+    if assignedLabel:
+        return assignedLabel
     bestFeatId = chooseBestFeature(dataSet)
     bestFeatName = featNames[bestFeatId]
 
@@ -192,8 +199,8 @@ def buildTree(dataSet, featNames):
 
 
 if __name__ == "__main__":
-    data, featNames = loadDataSet('golf.csv')
+    data, featNames = loadDataSet('car.csv')
     dtTree = buildTree(data, featNames)
-    # print (dtTree) 
-    # treeplot.createPlot(dtTree)
+    print (dtTree) 
+    treeplot.createPlot(dtTree)
     
